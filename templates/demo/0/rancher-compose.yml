@@ -1,0 +1,8 @@
+---
+version: 2
+catalog:
+  name: Demo
+  description: Demo deployment
+  version: v1
+  uuid: demo-0
+  minimum_rancher_version: v1.6
