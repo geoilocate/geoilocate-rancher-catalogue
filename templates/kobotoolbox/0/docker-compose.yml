@@ -439,14 +439,14 @@ services:
     labels:
       io.rancher.container.pull_image: always
 
-  web-lb:
-    image: rancher/lb-service-haproxy:v0.9.1
-    ports:
-      - ${WEBSERVER_PORT}:80
-    labels:
-      io.rancher.container.agent.role: environmentAdmin,agent
-      io.rancher.container.agent_service.drain_provider: 'true'
-      io.rancher.container.create_agent: 'true'
+  #web-lb:
+  #  image: rancher/lb-service-haproxy:v0.9.1
+  #  ports:
+  #    - ${WEBSERVER_PORT}:80
+  #  labels:
+  #    io.rancher.container.agent.role: environmentAdmin,agent
+  #    io.rancher.container.agent_service.drain_provider: 'true'
+  #    io.rancher.container.create_agent: 'true'
 
   # Adapted from https://github.com/${REPO_NAME}/${REPO_PREFIX}_enketo-express/blob/docker/docker-compose.yml.
   enketo-express:
