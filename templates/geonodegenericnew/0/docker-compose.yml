@@ -1,0 +1,133 @@
+version: '2'
+volumes:
+  dbdata-new: {}
+  geoserver-data-dir-new: {}
+  statics-new: {}
+  dbbackups-new:
+    driver: local
+services:
+  geoserver-new:
+    image: geosolutionsit/geoserver-docker:2.13.x
+    environment:
+      GEOSERVER_ADMIN_PASSWORD: geoserver
+      NGINX_BASE_URL: http://geonode.localhost/
+    stdin_open: true
+    volumes:
+    - geoserver-data-dir-new:/geoserver_data/data
+    labels:
+      io.rancher.scheduler.affinity:host_label: foo=bar
+      io.rancher.container.pull_image: always
+      org.geonode.component: geoserver-new
+      org.geonode.instance.name: geonode-new
+  backup-new:
+    image: geosolutionsit/geonode-backup:latest
+    environment:
+      PGHOST: db
+      PGUSER: postgres
+      RANCHER_ENV: Default
+      RANCHER_STACK: geonode-generic-new
+    stdin_open: true
+    volumes:
+    - statics-new:/mnt/volumes/statics/
+    - geoserver-data-dir-new:/mnt/volumes/data/
+    - dbbackups-new:/mnt/volumes/backups/
+    labels:
+      io.rancher.scheduler.affinity:host_label: foo=bar
+      org.geonode.component: backup-new
+      org.geonode.instance.name: geonode-new
+  django-new:
+    image: geosolutionsit/geonode-generic:1.0
+    environment:
+      ADMIN_EMAILS: ''
+      ALLOWED_HOSTS: '[''172.17.0.1'',''172.17.0.2'',''geonode.localhost'']'
+      C_FORCE_ROOT: '1'
+      DATABASE_URL: postgres://postgres:postgres@db:5432/geonode
+      DEFAULT_BACKEND_DATASTORE: datastore
+      DJANGO_SETTINGS_MODULE: geonode_generic.settings
+      DOCKER_API_VERSION: '1.24'
+      DOCKER_ENV: production
+      GEOIP_PATH: /mnt/volumes/statics/geoip.db
+      GEONODE_DATABASE: geonode
+      GEONODE_DATABASE_PASSWORD: geonode
+      GEONODE_GEODATABASE: geonode_data
+      GEONODE_GEODATABASE_PASSWORD: geonode_data
+      GEONODE_INSTANCE_NAME: geonode
+      GEOSERVER_ADMIN_PASSWORD: geoserver
+      GEOSERVER_LOCATION: http://geoserver:8080/geoserver/
+      GEOSERVER_PUBLIC_LOCATION: http://geonode.localhost/geoserver/
+      IS_CELERY: 'false'
+      MEDIA_ROOT: /mnt/volumes/statics/uploaded/
+      RANCHER_ENV: Default
+      RANCHER_STACK: geonode-generic-new
+      SITEURL: http://172.17.0.1/
+      STATIC_ROOT: /mnt/volumes/statics/static/
+      UWSGI_CMD: uwsgi --ini /usr/src/app/uwsgi.ini
+    stdin_open: true
+    volumes:
+    - /var/run/docker.sock:/var/run/docker.sock
+    - statics-new:/mnt/volumes/statics
+    - settings-data-new:/usr/src/app/geonode_generic
+    command:
+    - uwsgi
+    - --ini
+    - /usr/src/app/uwsgi.ini
+    labels:
+      io.rancher.scheduler.affinity:host_label: foo=bar
+      org.geonode.component: django-new
+      org.geonode.instance.name: geonode-new
+      io.rancher.container.pull_image: always
+  restore-new:
+    image: geosolutionsit/geonode-restore:latest
+    environment:
+      PGHOST: db
+      PGUSER: postgres
+      RANCHER_ENV: Default
+      RANCHER_STACK: geonode-generic-new
+    stdin_open: true
+    volumes:
+    - statics-new:/mnt/volumes/statics/
+    - geoserver-data-dir-new:/mnt/volumes/data/
+    - dbbackups-new:/mnt/volumes/backups/
+    labels:
+      io.rancher.scheduler.affinity:host_label: foo=bar
+      io.rancher.container.start_once: 'true'
+      org.geonode.component: restore-new
+      org.geonode.instance.name: geonode-new
+  data-dir-conf-new:
+    image: geosolutionsit/geoserver_data:2.13.x
+    volumes:
+    - geoserver-data-dir-new:/geoserver_data/data
+    command:
+    - /bin/true
+    labels:
+      io.rancher.scheduler.affinity:host_label: foo=bar
+      io.rancher.container.start_once: 'true'
+      org.geonode.component: conf-new
+      io.rancher.container.pull_image: always
+      org.geonode.instance.name: geonode-new
+  geonode-new:
+    image: geosolutionsit/nginx-geonode:latest
+    stdin_open: true
+    volumes:
+    - statics-new:/mnt/volumes/statics
+    labels:
+      io.rancher.scheduler.affinity:host_label: foo=bar
+      org.geonode.component: nginx-new
+      org.geonode.instance.name: geonode-new
+      io.rancher.container.pull_image: always
+  db-new:
+    image: geosolutionsit/postgis-docker:9.6
+    environment:
+      GEONODE_DATABASE: geonode
+      GEONODE_DATABASE_PASSWORD: geonode
+      GEONODE_GEODATABASE: geonode_data
+      GEONODE_GEODATABASE_PASSWORD: geonode_data
+    stdin_open: true
+    volumes:
+    - dbdata-new:/var/lib/postgresql/data
+    - dbbackups-new:/pg_backups
+    labels:
+      io.rancher.scheduler.affinity:host_label: foo=bar
+      io.rancher.container.pull_image: always
+      org.geonode.component: db-new
+      org.geonode.instance.name: geonode-new
