@@ -4,4 +4,4 @@ version: 1
 category: Geonode
 maintainer: Geoilocate.
 license: GPL v3
-projectURL:
+projectURL:https://github.com/geoilocate/geoilocate-rancher-catalogue
