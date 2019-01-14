@@ -2,9 +2,37 @@ version: '2'
 catalog:
   name: "Kobotoolbox"
   description: "Kobotoolbox fork"
-  version: 1
+  version: 2
   uuid: kartoza-kobotoolbox-0
   questions:
+    - variable: USE_KPI_THEME_APP
+      label: "Does this instance use specific KPI theme?"
+      required: true
+      default: "False"
+      type: "enum"
+      options:
+        - "True"
+        - "False"
+    - variable: CUSTOM_KPI_THEME_APP_PIP_URL
+      label: "The django app PIP URL for installation"
+      description: "Example: git+https://github.com/user/repo.git@tag"
+      default: "git+https://github.com/kartoza/custom_kpi_theme@develop"
+      type: "string"
+
+    - variable: USE_KOBOCAT_THEME_APP
+      label: "Does this instance use specific Kobocat theme?"
+      required: true
+      default: "False"
+      type: "enum"
+      options:
+        - "True"
+        - "False"
+    - variable: CUSTOM_KOBOCAT_THEME_APP_PIP_URL
+      label: "The django app PIP URL for installation"
+      description: "Example: git+https://github.com/user/repo.git@tag"
+      default: "git+https://github.com/kartoza/custom_kobocat_theme@develop"
+      type: "string"
+
     - variable: ENKETO_API_TOKEN
       label: "Enketo API Token"
       description: "Can be initialized with random string."
@@ -77,28 +105,39 @@ catalog:
       default: "enketo"
       type: string
 
+    - variable: USE_EXTERNAL_SMTP
+      label: "Use external SMTP host"
+      description: "Set to false to use local SMTP server for testing"
+      default: false
+      type: boolean
     - variable: EMAIL_HOST
       label: "SMTP host to use"
+      description: "Only used if using external SMTP"
       type: string
 
     - variable: EMAIL_PORT
       label: "SMTP port to use"
+      description: "Only used if using external SMTP"
       type: string
 
     - variable: EMAIL_HOST_USER
       label: "SMTP host user"
+      description: "Only used if using external SMTP"
       type: string
 
     - variable: EMAIL_HOST_PASSWORD
       label: "Email host password"
+      description: "Only used if using external SMTP"
       type: string
 
     - variable: EMAIL_USE_TLS
       label: "Email TLS settings"
+      description: "Only used if using external SMTP"
       type: enum
+      default: 'False'
       options:
-        - True
-        - False
+        - 'True'
+        - 'False'
 
     - variable: POSTGRES_BACKUP_SCHEDULE
       label: "Cron schedule of Postgres backup."
