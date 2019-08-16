@@ -32,8 +32,7 @@ services:
         org.geonode.component: geoserver
         org.geonode.instance.name: geonode
         # io.rancher.container.pull_image: always
-    # depends_on:
-    links:
+    depends_on:
       - db
       - data-dir-conf
     volumes:
@@ -60,7 +59,7 @@ services:
         org.geonode.component: django
         org.geonode.instance.name: geonode
         # io.rancher.container.pull_image: always
-    links:
+    depends_on:
       - db
       - data-dir-conf
     # command: paver start_django -b 0.0.0.0:8000
@@ -121,7 +120,7 @@ services:
         org.geonode.component: nginx
         org.geonode.instance.name: geonode
         # io.rancher.container.pull_image: always
-    links:
+    depends_on:
       - django
       - geoserver
     ports:
