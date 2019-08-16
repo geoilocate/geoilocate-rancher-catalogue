@@ -1,8 +1,0 @@
-name: Demo
-description: |
-    Demo deployment
-version: v1
-category: Training
-maintainer: Geoilocate
-license: GPL
-projectURL: https://github.com/geoilocate/geoilocate-rancher-catalogue
