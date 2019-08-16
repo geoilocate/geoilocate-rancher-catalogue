@@ -84,7 +84,7 @@ services:
       BROKER_URL: amqp://guest:guest@rabbitmq:5672
       DOCKER_ENV: production
       UWSGI_CMD: uwsgi --ini /usr/src/app/uwsgi.ini
-      IS_CELERY: false
+      IS_CELERY: 'False'
       C_FORCE_ROOT: 1
       SITEURL:  http://${SITEURL}/
     # replaced with defaults in settings
@@ -98,8 +98,8 @@ services:
       ALLOWED_HOSTS: ${ALLOWED_HOSTS}
       ADMIN_EMAILS:
       DEFAULT_BACKEND_UPLOADER: geonode.importer
-      TIME_ENABLED: True
-      MOSAIC_ENABLED: False
+      TIME_ENABLED: 'True'
+      MOSAIC_ENABLED: 'False'
 #       HAYSTACK_SEARCH: False
 #       HAYSTACK_ENGINE_URL: http://elasticsearch:9200/
 #       HAYSTACK_ENGINE_INDEX_NAME: haystack
