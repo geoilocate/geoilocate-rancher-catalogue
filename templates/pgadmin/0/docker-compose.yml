@@ -1,1 +1,15 @@
+version: '2'
 
+volumes:
+  pgadmin_data:
+
+services:
+  pgadmin4:
+     image: dpage/pgadmin4:${PGADMIN_VERSION}
+     hostname: pgadmin4
+     volumes:
+      - pgadmin_data:/var/lib/pgadmin
+     environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_PASSWORD}
+     restart: on-failure
