@@ -1,0 +1,7 @@
+name: "PgAdmin"
+description: "PgAdmin using docker containers"
+version: 1
+category: Software
+maintainer: Geoilocate CC
+license: GPL v3
+projectURL: https://hub.docker.com/r/dpage/pgadmin4
